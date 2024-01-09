@@ -55,6 +55,16 @@ kubectl expose deployment nginx --type=NodePort --port=80
 minikube service nginx --url
 ```
 
+- **Minikube IP address**
+```bash
+minikube ip
+```
+
+- **Expose service on Minikube**
+```bash
+minikube service <service-name>
+```
+
 ### Sample deployment with yaml files
 ```bash
 cd sample-deployment && kubectl apply -f .

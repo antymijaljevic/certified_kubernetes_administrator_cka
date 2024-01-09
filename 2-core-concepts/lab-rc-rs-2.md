@@ -3,7 +3,7 @@
 ### ReplicaController / ReplicaSet
 
 - **Basic**
-```
+```bash
 kubectl get rc
 kubectl get rs
 kubectl describe rs <replica-set-name>

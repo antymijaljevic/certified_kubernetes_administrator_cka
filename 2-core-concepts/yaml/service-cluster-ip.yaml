@@ -1,0 +1,17 @@
+# This IP is used by other components within the cluster to communicate with the Kubernetes API server.
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: back-end
+
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+      port: 80
+
+  selector:
+      app: myapp
+      type: front-end
