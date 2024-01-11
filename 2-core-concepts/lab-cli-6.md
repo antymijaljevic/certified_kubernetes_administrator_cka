@@ -29,3 +29,8 @@ kubectl create deployment redis-deploy -n dev-ns --image=redis --replicas=2
 ```bash
 kubectl create namespace dev-ns
 ```
+
+- **Apply resource (creates Last Applied Configuration)**
+```bash
+kubectl apply -f pod-definition.yaml 
+```
