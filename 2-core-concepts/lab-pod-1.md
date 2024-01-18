@@ -2,7 +2,7 @@
 
 ### PODS
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get pods
 kubectl run nginx --image=nginx

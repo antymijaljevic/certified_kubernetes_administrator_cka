@@ -2,7 +2,7 @@
 
 ### Multiple Schedulers
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl describe pod kube-scheduler-controlplane -n kube-system | grep Image:
 kubectl get all -A

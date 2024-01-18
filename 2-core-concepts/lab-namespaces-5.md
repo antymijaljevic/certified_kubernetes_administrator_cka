@@ -2,7 +2,7 @@
 
 ### Namespaces
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl create namespace dev
 kubectl get namespaces

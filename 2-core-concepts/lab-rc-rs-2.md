@@ -2,7 +2,7 @@
 
 ### ReplicaController / ReplicaSet
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get rc
 kubectl get rs

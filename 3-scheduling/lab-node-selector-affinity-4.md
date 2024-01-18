@@ -2,7 +2,7 @@
 
 ### Node Selectors & Affinity
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl describe node node01
 kubectl label node node01 color=blue

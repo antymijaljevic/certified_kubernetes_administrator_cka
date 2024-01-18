@@ -2,7 +2,7 @@
 
 ### Taints and Tolerations
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get nodes -o wide
 

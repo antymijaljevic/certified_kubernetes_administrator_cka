@@ -2,7 +2,7 @@
 
 ### Services
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get service
 kubectl describe svc kubernetes

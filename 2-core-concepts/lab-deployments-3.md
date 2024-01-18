@@ -2,7 +2,7 @@
 
 ### Deployments
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get deployments
 kubectl create -f <deployment-name>.yaml

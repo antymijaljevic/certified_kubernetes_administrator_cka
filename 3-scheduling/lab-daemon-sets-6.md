@@ -2,7 +2,7 @@
 
 ### Daemon Sets
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get daemonsets --all-namespaces
 kubectl get daemonsets --all-namespaces -o wide

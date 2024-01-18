@@ -2,7 +2,7 @@
 
 ### Static pods
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get pods -A | wc -l
 kubectl get pods -A | grep controlplane| wc -l

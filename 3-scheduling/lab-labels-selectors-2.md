@@ -2,7 +2,7 @@
 
 ### Labels and Selectors
 
-- **Basic**
+- **Commands**
 ```bash
 kubectl get pods --selector app=app-1
 kubectl get all --selector env=prod
