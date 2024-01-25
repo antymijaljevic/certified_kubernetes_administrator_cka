@@ -85,34 +85,21 @@ echo -e '# eksctl\nexport PATH=$HOME/usr/local/bin:$PATH' >> /etc/profile
 eksctl version
 ```
 
-[Create your Amazon EKS cluster and nodes Docs - Installing eksctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
+### 3 | Install Minikube
 
-### 3 | Create dev EKS cluster on AWS
-
-- **Check credentials**
+[Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- **Install minikube**
 ```bash
-aws sts get-caller-identity
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
-
-- **Create EKS cluster**
+- **Setup MiniKube**
 ```bash
-eksctl create cluster --name dev-eks-cluster --fargate
+minikube start --container-runtime=docker --driver=docker
 ```
-
-- **Connect your local machine with newly the created cluster (Skip this step)**
+- **Verify that prerequisites are installed**
 ```bash
-aws eks update-kubeconfig --region us-west-2
-```
-
-- **Verify resources**
-```bash
-kubectl get nodes -o wide
-kubectl get pods -A -o wide
-```
-
-- **Delete cluster**
-```bash
-eksctl delete cluster --name dev-eks-cluster
+docker ps && kubectl version && minikube version
 ```
 
 [Encrypting Confidential Data at Rest k8s Docs](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
@@ -121,7 +108,7 @@ eksctl delete cluster --name dev-eks-cluster
 
 - **Create sample secret**
 ```bash
-kubectl create secret generic my-secret --from-literal=key1=supersecret
+c
 ```
 
 - **Describe secret (encoded in base64)**
@@ -136,26 +123,78 @@ echo "c3VwZXJzZWNyZXQ=" | base64 --decode
 echo "supersecret" | base64
 ```
 
-- **Install etcd-clients**
+- **Verify etcd-minikube pod**
 ```bash
-sudo apt install etcd-client
-kubectl get pods -n kube-system
+kubectl get pods -n kube-system | grep etcd
 ```
 
-- **Verify if secret is encrypted**
+- **Install etcd-client and Hexdump (minikube ssh)**
+```bash
+sudo -s
+apt update
+apt install etcd-client
+apt-get install bsdmainutils
+etcdctl --version && hexdump --version
+```
+
+- **Verify if secret is encrypted (minikube ssh)**
 ```bash
 ETCDCTL_API=3 etcdctl \
-   --cacert=/etc/kubernetes/pki/etcd/ca.crt   \
-   --cert=/etc/kubernetes/pki/etcd/server.crt \
-   --key=/etc/kubernetes/pki/etcd/server.key  \
+   --cacert=/var/lib/minikube/certs/etcd/ca.crt   \
+   --cert=/var/lib/minikube/certs/etcd/server.crt \
+   --key=/var/lib/minikube/certs/etcd/server.key  \
    get /registry/secrets/default/my-secret | hexdump -C
+```
 
-ps -aux | grep kube-api | grep "encryption-provider-config"
+- **Verify if there are encryption on flags (returns nothing is false)**
+```bash
+ps -aux | grep kube-api | grep "--encryption-provider-config"
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep encryption
+```
 
-cat /etc/kubernetes/manifests/kube-apiserver.yaml
+- **Start by generating a new encryption key, and then encode it using base64**
+```bash
+head -c 32 /dev/urandom | base64
 ```
 
 - **Create a new encryption config file**
-```yaml
-
+```bash
+cat <<EOF > /etc/kubernetes/enc/enc.yaml
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              # See the following text for more details about the secret value
+              secret: GbMAlnyvINEBTOo7Ac23S7SFRg6djIm1PK4Otk9K7VU== # put here generated key
+      - identity: {} # this fallback allows reading unencrypted secrets;
+                     # for example, during initial migration
+EOF
 ```
+
+nano /etc/kubernetes/manifests/kube-apiserver.yaml
+
+    - --encryption-provider-config=/etc/kubernetes/enc/enc.yaml
+
+        - mountPath: /etc/kubernetes/enc
+      name: enc
+      readOnly: true
+
+  - name: enc
+    hostPath:
+      path: /etc/kubernetes/enc
+      type: DirectoryOrCreate
+
+
+
+kubectl create secret generic my-secret-2 --from-literal=key1=topsecret
+
+ETCDCTL_API=3 etcdctl \
+   --cacert=/var/lib/minikube/certs/etcd/ca.crt   \
+   --cert=/var/lib/minikube/certs/etcd/server.crt \
+   --key=/var/lib/minikube/certs/etcd/server.key  \
+   get /registry/secrets/default/my-secret-2 | hexdump -C
