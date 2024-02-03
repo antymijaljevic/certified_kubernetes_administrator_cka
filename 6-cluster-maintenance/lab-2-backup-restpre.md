@@ -50,7 +50,3 @@ kubectl delete pod/etcd-controlplane -n kube-system
 
 kubectl get all -A --watch
 ```
-
-
-
-
