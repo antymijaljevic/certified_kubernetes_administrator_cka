@@ -1,4 +1,4 @@
-# TLS Certs
+# PKI Overview
 
 ### Symmetric encryption
 
@@ -31,3 +31,32 @@ openssl genrsa -in <name>.key -pubout > <name>.pem
 ssh-keygen
 cat ~/.ssh/authorized_keys
 ```
+
+! You can encrypt payload with public & private key, but only decrypt with private key
+
+### Certificates
+
+* self-signed
+* signed
+    * Certificate Signing Request (CSR)
+    * CERITFICATE AUTHORITY (CA)
+        * popular CA
+            * Symantec
+            * GlobalSign
+            * DigiCert
+        * also have private public keys (public keys are build-in browsers)
+    * Private CA
+
+- **CSR**
+```bash
+openssl req -new -key <name>.key -out <name>.csr \
+-subj "/C=US/ST=CA/O=MyOrg, Inc./CN=<my-domain>"
+```
+
+### Keys
+* public
+    * .crt
+    * .pem
+* Private
+    * .key
+    * key.pem
