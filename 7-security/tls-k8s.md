@@ -1,12 +1,11 @@
 # TLS in Kubernetes
 
-### Symmetric encryption
+### Certificates
 
-* Symmetric encryption
-    * Using the same key do encrypt and decrypt
+* Server Certs
+    * Cert (public key)
+    * Private key
+* Root Certificates (CA)
+* Client Certificates
 
-- **Generate private and public key pair**
-```bash
-openssl genrsa -out <name>.key 1024
-openssl genrsa -in <name>.key -pubout > <name>.pem
-```
+https://github.com/mmumshad/kubernetes-the-hard-way/tree/master/tools
