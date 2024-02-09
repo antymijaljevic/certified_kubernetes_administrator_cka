@@ -57,4 +57,9 @@ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text | grep Not
 openssl x509 -in /etc/kubernetes/pki/ca.crt -text | grep Not
 ```
 
-12/13
+- **TLS handshake timeout**
+```bash
+openssl x509 -in /etc/kubernetes/pki/ca.crt -text | grep Not
+ ls -l /etc/kubernetes/pki/etcd/server* | grep .crt
+ nano /etc/kubernetes/manifests/etcd.yaml
+```
